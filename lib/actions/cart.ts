@@ -1,63 +1,10 @@
 "use client";
-import { createClient } from "@/utils/supabase/client";
-import type { CartItem, CartItemWithProduct, Product } from "@/types/database";
-
-type CartItemRow = CartItem & { products?: Product | null };
-
-async function identity(sessionId: string) {
-  const supabase = createClient();
-  const { data } = await supabase.auth.getUser();
-  return { supabase, userId: data.user?.id ?? null, sessionId };
-}
-
-export async function getCartItems(sessionId: string): Promise<CartItemWithProduct[]> {
-  if (!sessionId) return [];
-  const { supabase, userId } = await identity(sessionId);
-  let query = supabase.from("cart_items").select("*, products(*)");
-  query = userId ? query.or(`user_id.eq.${userId},session_id.eq.${sessionId}`) : query.eq("session_id", sessionId);
-  const { data, error } = await query;
-  if (error) { console.error("getCartItems error:", error.message); return []; }
-  return ((data ?? []) as CartItemRow[]).map(item => ({ ...item, product: item.products as Product })).filter(item => !!item.product) as CartItemWithProduct[];
-}
-
-export async function addToCart(sessionId: string, productId: string): Promise<void> {
-  const { supabase, userId } = await identity(sessionId);
-  let lookup = supabase.from("cart_items").select("id, quantity").eq("product_id", productId);
-  lookup = userId ? lookup.eq("user_id", userId) : lookup.eq("session_id", sessionId);
-  const { data } = await lookup.maybeSingle();
-  if (data) { await supabase.from("cart_items").update({ quantity: data.quantity + 1 }).eq("id", data.id); return; }
-  await supabase.from("cart_items").insert({ session_id: sessionId, user_id: userId, product_id: productId, quantity: 1 });
-}
-
-export async function updateCartItemQuantity(sessionId: string, productId: string, quantity: number): Promise<void> {
-  if (quantity <= 0) return removeFromCart(sessionId, productId);
-  const { supabase, userId } = await identity(sessionId);
-  let q = supabase.from("cart_items").update({ quantity }).eq("product_id", productId);
-  q = userId ? q.eq("user_id", userId) : q.eq("session_id", sessionId);
-  await q;
-}
-export async function removeFromCart(sessionId: string, productId: string): Promise<void> {
-  const { supabase, userId } = await identity(sessionId);
-  let q = supabase.from("cart_items").delete().eq("product_id", productId);
-  q = userId ? q.eq("user_id", userId) : q.eq("session_id", sessionId);
-  await q;
-}
-export async function clearCart(sessionId: string): Promise<void> {
-  const { supabase, userId } = await identity(sessionId);
-  let q = supabase.from("cart_items").delete();
-  q = userId ? q.eq("user_id", userId) : q.eq("session_id", sessionId);
-  await q;
-}
-
-export async function claimGuestCart(sessionId: string): Promise<void> {
-  if (!sessionId) return;
-  const { supabase, userId } = await identity(sessionId);
-  if (!userId) return;
-  const { data: guestItems } = await supabase.from("cart_items").select("id, product_id, quantity").eq("session_id", sessionId).is("user_id", null);
-  for (const item of guestItems ?? []) {
-    const { data: existing } = await supabase.from("cart_items").select("id, quantity").eq("user_id", userId).eq("product_id", item.product_id).maybeSingle();
-    if (existing) await supabase.from("cart_items").update({ quantity: existing.quantity + item.quantity }).eq("id", existing.id);
-    else await supabase.from("cart_items").update({ user_id: userId }).eq("id", item.id);
-    if (existing) await supabase.from("cart_items").delete().eq("id", item.id);
-  }
-}
+import {createClient} from "@/utils/supabase/client";import type{CartItem,CartItemWithProduct,Product}from"@/types/database";
+type Row=CartItem&{products?:Product|null};
+async function identity(sessionId:string){const supabase=createClient();const{data}=await supabase.auth.getUser();return{supabase,userId:data.user?.id??null,sessionId}}
+export async function getCartItems(sessionId:string):Promise<CartItemWithProduct[]>{if(!sessionId)return[];const{supabase,userId}=await identity(sessionId);let q=supabase.from("cart_items").select("*, products(*, product_variants(*))");q=userId?q.or(`user_id.eq.${userId},session_id.eq.${sessionId}`):q.eq("session_id",sessionId);const{data,error}=await q;if(error){console.error(error.message);return[]}return((data??[])as Row[]).map(i=>({...i,product:i.products as Product})).filter(i=>!!i.product)as CartItemWithProduct[]}
+export async function addToCart(sessionId:string,productId:string,variantId?:string,color?:string,price?:number){const{supabase,userId}=await identity(sessionId);let q=supabase.from("cart_items").select("id,quantity").eq("product_id",productId);q=userId?q.eq("user_id",userId):q.eq("session_id",sessionId);if(variantId)q=q.eq("variant_id",variantId);else q=q.is("variant_id",null);const{data}=await q.maybeSingle();if(data){await supabase.from("cart_items").update({quantity:data.quantity+1}).eq("id",data.id);return}await supabase.from("cart_items").insert({session_id:sessionId,user_id:userId,product_id:productId,variant_id:variantId||null,selected_color:color||null,unit_price:price??null,quantity:1})}
+export async function updateCartItemQuantity(sessionId:string,id:string,q:number){if(q<=0)return removeFromCart(sessionId,id);const{supabase,userId}=await identity(sessionId);let x=supabase.from("cart_items").update({quantity:q}).eq("id",id);x=userId?x.eq("user_id",userId):x.eq("session_id",sessionId);await x}
+export async function removeFromCart(sessionId:string,id:string){const{supabase,userId}=await identity(sessionId);let q=supabase.from("cart_items").delete().eq("id",id);q=userId?q.eq("user_id",userId):q.eq("session_id",sessionId);await q}
+export async function clearCart(sessionId:string){const{supabase,userId}=await identity(sessionId);let q=supabase.from("cart_items").delete();q=userId?q.eq("user_id",userId):q.eq("session_id",sessionId);await q}
+export async function claimGuestCart(sessionId:string){if(!sessionId)return;const{supabase,userId}=await identity(sessionId);if(!userId)return;const{data}=await supabase.from("cart_items").select("id,product_id,variant_id,quantity").eq("session_id",sessionId).is("user_id",null);for(const i of data??[]){let q=supabase.from("cart_items").select("id,quantity").eq("user_id",userId).eq("product_id",i.product_id);q=i.variant_id?q.eq("variant_id",i.variant_id):q.is("variant_id",null);const{data:existing}=await q.maybeSingle();if(existing)await supabase.from("cart_items").update({quantity:existing.quantity+i.quantity}).eq("id",existing.id);else await supabase.from("cart_items").update({user_id:userId}).eq("id",i.id);if(existing)await supabase.from("cart_items").delete().eq("id",i.id)}}
