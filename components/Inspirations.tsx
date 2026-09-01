@@ -1,174 +1,47 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export default function Inspirations() {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
-
 const testimonials = [
-  {
-    id: 1,
-    text: "The 3D view feature completely changed how I shop for furniture. Being able to see the exact size and texture of the sofa before buying meant it fit perfectly in my living room. Outstanding quality too!",
-    name: "Sarah Jenkins",
-    role: "Interior Designer",
-    image: "/persons_img/sarah.jpg",
-  },
-  {
-    id: 2,
-    text: "Furnify has amazing customer service and fast shipping. The olive green accent chair I bought matched their 3D model perfectly. I couldn't be happier with the fast delivery and easy assembly.",
-    name: "Michael Chen",
-    role: "Homeowner",
-    image: "/persons_img/michael.jpg",
-  },
-  {
-    id: 3,
-    text: "I was skeptical about buying an expensive dining table online, but Furnify's modern selection and realistic textures gave me confidence. It looks incredible and sturdy in real life.",
-    name: "Emily Rodriguez",
-    role: "Architect",
-    image: "/persons_img/emily.jpg",
-  },
+  { text: "کیفیت محصولات و جزئیات کار چوب واقعاً فوق‌العاده بود. چیزی که تحویل گرفتم دقیقاً همان چیزی بود که انتظار داشتم.", name: "سارا احمدی", role: "طراح داخلی", image: "/persons_img/sarah.jpg" },
+  { text: "از انتخاب محصول تا ارسال، همه چیز مرتب و حرفه‌ای بود. طراحی کلاسیک محصول کاملاً با فضای خانه ما هماهنگ شد.", name: "مهدی کریمی", role: "مشتری ترنج", image: "/persons_img/michael.jpg" },
+  { text: "اگر دنبال مبلمان اصیل و ماندگار هستید، ترنج انتخابی مطمئن است. تجربه خرید من بسیار خوب بود.", name: "نگار رضایی", role: "معمار", image: "/persons_img/emily.jpg" },
 ];
 
-  const handlePrev = () => {
-    setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
-  };
-
-  // Auto-advance every 5 s; resets when user navigates manually
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentTestimonial((prev) =>
-        prev === testimonials.length - 1 ? 0 : prev + 1
-      );
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [currentTestimonial, testimonials.length]);
+export default function Inspirations() {
+  const [current, setCurrent] = useState(0);
+  useEffect(() => { const timer = setInterval(() => setCurrent((p) => (p + 1) % testimonials.length), 5000); return () => clearInterval(timer); }, []);
+  const item = testimonials[current];
 
   return (
-    <section className="w-full px-4 md:px-8 py-16 bg-[#e8e7e3]">
-      <div className="max-w-7xl mx-auto">
-        
-        {/* Inspirations Section */}
-        <div className="flex flex-col lg:flex-row gap-12 items-center mb-24">
-          <div className="lg:w-1/3">
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-gray-900 mb-6 leading-tight">
-              70+ Unique <br /> Furniture <br /> Inspirations
-            </h2>
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              Our designer has carefully curated a lot of beautiful prototypes of rooms that inspire you. Browse through our immersive 3D gallery to find the perfect modern aesthetic for your home.
-            </p>
-            <button className="bg-[#91A57D] text-white font-semibold flex items-center gap-2 px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:bg-[#7e916c] transition-all group">
-              Explore More
-              <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform" />
-            </button>
+    <section className="w-full px-5 md:px-8 py-16 bg-[#FCFAF6]">
+      <div className="max-w-6xl mx-auto">
+        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+          <div>
+            <p className="text-[#B88A3A] font-bold mb-3">الهام از هنر ایرانی</p>
+            <h2 className="text-3xl md:text-5xl font-black leading-tight text-[#0B2942]">خانه‌ای که<br />داستان شما را می‌گوید</h2>
+            <p className="text-[#6F6A62] leading-8 mt-6 max-w-xl">از چوب و هنر دست استادکاران ایرانی تا جزئیات ظریف دکوراسیون؛ هر قطعه ترنج برای ساختن فضایی اصیل و ماندگار انتخاب شده است.</p>
+            <button className="mt-7 inline-flex items-center gap-2 px-6 py-3 bg-[#062A43] hover:bg-[#031C2E] text-[#FCFAF6] rounded-md font-bold transition-colors">مشاهده مجموعه‌ها <ArrowLeft size={17} /></button>
           </div>
-          
-          {/* Gallery / Carousel Placeholder */}
-          <div className="lg:w-2/3 flex gap-6 overflow-x-auto pb-8 snap-x snap-mandatory hide-scroll-bar">
-            {/* Main Image */}
-            <div className="min-w-[280px] md:min-w-[400px] h-[500px] flex-shrink-0 snap-center relative rounded-3xl overflow-hidden shadow-xl group">
-              <img src="/product_img/minimalist_bedroom.jpg" alt="Inspiration 1" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute bottom-6 left-6 right-6 bg-white/90 backdrop-blur-md p-4 rounded-2xl flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-sm">
-                 <div>
-                   <h4 className="font-bold text-gray-900 text-sm">Minimalist Bedroom</h4>
-                   <p className="text-xs text-gray-500">2 Items</p>
-                 </div>
-                 <button className="w-10 h-10 rounded-full bg-[#5a6450] text-white flex items-center justify-center hover:scale-110 transition-transform">
-                   <ArrowRight size={16} />
-                 </button>
-              </div>
-            </div>
-
-            {/* Smaller Gallery Images */}
-            <div className="min-w-[240px] md:min-w-[320px] h-[450px] mt-12 flex-shrink-0 snap-center relative rounded-3xl overflow-hidden shadow-lg group">
-              <img src="/product_img/inspire3.jpg" alt="Inspiration 2" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-            </div>
-
-            <div className="min-w-[240px] md:min-w-[320px] h-[450px] mt-12 flex-shrink-0 snap-center relative rounded-3xl overflow-hidden shadow-lg group">
-              <img src="/product_img/inspire2.jpg" alt="Inspiration 3" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700" />
-            </div>
+          <div className="grid grid-cols-2 gap-4 h-[390px]">
+            <img src="/product_img/minimalist_bedroom.jpg" alt="دکوراسیون ترنج" className="w-full h-full object-cover rounded-2xl" />
+            <div className="pt-12"><img src="/product_img/inspire3.jpg" alt="مبلمان ترنج" className="w-full h-full object-cover rounded-2xl" /></div>
           </div>
         </div>
 
-        {/* Testimonials Section */}
-        <div id="testimonials" className="bg-white rounded-[3rem] p-8 md:p-16 shadow-sm flex flex-col md:flex-row items-center gap-12 relative overflow-hidden">
-          <div className="md:w-1/3">
-             <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-gray-900 leading-tight mb-4">
-               Our Clients <br /> Beautiful Words
-             </h2>
-             <p className="text-gray-600">
-               Don&apos;t just take our word for it—see what our satisfied customers have to say about their Furnify experience.
-             </p>
-          </div>
-          
-          <div className="md:w-2/3 relative">
-            <motion.div
-              key={currentTestimonial}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.4 }}
-              className="bg-[#f8f8f6] p-8 md:p-12 rounded-3xl relative"
-            >
-              {/* Quote Icon */}
-              <div className="absolute top-8 left-8 text-[#91A57D]/20 text-6xl font-serif leading-none rotate-180">
-                &#10077;
-              </div>
-              
-              <div className="relative z-10 pl-4 md:pl-8">
-                <p className="text-lg md:text-xl text-gray-800 italic mb-8 leading-relaxed font-medium">
-                  {testimonials[currentTestimonial].text}
-                </p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <img 
-                      src={testimonials[currentTestimonial].image} 
-                      alt={testimonials[currentTestimonial].name} 
-                      className="w-14 h-14 rounded-full object-cover shadow-md border-2 border-white"
-                    />
-                    <div>
-                      <h4 className="font-bold text-gray-900">{testimonials[currentTestimonial].name}</h4>
-                      <p className="text-sm text-gray-500">{testimonials[currentTestimonial].role}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex gap-2">
-                    <button 
-                      onClick={handlePrev}
-                      className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:bg-[#91A57D] hover:text-white hover:border-[#91A57D] transition-all shadow-sm"
-                    >
-                      <ArrowLeft size={16} />
-                    </button>
-                    <button 
-                      onClick={handleNext}
-                      className="w-10 h-10 rounded-full border border-[#91A57D] bg-[#91A57D] text-white flex items-center justify-center hover:bg-[#7e916c] hover:border-[#7e916c] transition-all shadow-sm"
-                    >
-                      <ArrowRight size={16} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-            
-            {/* Pagination Dots */}
-            <div className="flex justify-center gap-2 mt-6">
-              {testimonials.map((_, idx) => (
-                <button 
-                  key={idx}
-                  onClick={() => setCurrentTestimonial(idx)}
-                  className={`h-2 rounded-full transition-all ${currentTestimonial === idx ? 'w-8 bg-[#91A57D]' : 'w-2 bg-gray-300'}`}
-                />
-              ))}
+        <div id="testimonials" className="bg-[#062A43] text-[#FCFAF6] rounded-3xl p-7 md:p-12 grid md:grid-cols-[.8fr_1.6fr] gap-10 items-center overflow-hidden">
+          <div><p className="text-[#D9AE62] font-bold mb-3">نظر مشتریان</p><h2 className="text-3xl md:text-4xl font-black leading-tight">تجربه‌ای که<br />مشتری‌ها می‌گویند</h2><p className="text-white/65 text-sm leading-7 mt-4">اعتماد شما، باارزش‌ترین بخش داستان ترنج است.</p></div>
+          <motion.div key={current} initial={{ opacity: 0, x: 15 }} animate={{ opacity: 1, x: 0 }} className="bg-[#FCFAF6] text-[#0B2942] rounded-2xl p-7 md:p-9 relative">
+            <Quote className="absolute top-6 left-6 text-[#B88A3A]/30" size={42} />
+            <p className="text-base md:text-lg leading-8 font-medium pl-4">«{item.text}»</p>
+            <div className="flex items-center justify-between mt-8">
+              <div className="flex items-center gap-3"><img src={item.image} alt={item.name} className="w-12 h-12 rounded-full object-cover" /><div><p className="font-bold text-sm">{item.name}</p><p className="text-xs text-[#6F6A62] mt-1">{item.role}</p></div></div>
+              <div className="flex gap-2"><button onClick={() => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length)} className="w-9 h-9 rounded-full border border-[#062A43]/20 flex items-center justify-center"><ArrowRight size={15} /></button><button onClick={() => setCurrent((p) => (p + 1) % testimonials.length)} className="w-9 h-9 rounded-full bg-[#B88A3A] text-white flex items-center justify-center"><ArrowLeft size={15} /></button></div>
             </div>
-          </div>
+          </motion.div>
         </div>
-
       </div>
     </section>
   );
