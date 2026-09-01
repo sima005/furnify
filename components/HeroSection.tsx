@@ -1,150 +1,49 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, ShoppingBag, Truck, Headset, ShieldCheck, Sparkles } from "lucide-react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Environment, ContactShadows, Center, Bounds } from "@react-three/drei";
-import { Suspense } from "react";
-
-function Chair({ position, rotation }: { position: [number, number, number]; rotation?: [number, number, number] }) {
-  return (
-    <group position={position} rotation={rotation}>
-      <mesh castShadow receiveShadow position={[0, 0.38, 0]}>
-        <boxGeometry args={[0.5, 0.08, 0.5]} />
-        <meshStandardMaterial color="#cbbda8" roughness={0.55} />
-      </mesh>
-      <mesh castShadow receiveShadow position={[0, 0.7, -0.2]}>
-        <boxGeometry args={[0.5, 0.6, 0.08]} />
-        <meshStandardMaterial color="#b8aa96" roughness={0.6} />
-      </mesh>
-      {[
-        [-0.18, 0.2, -0.18],
-        [0.18, 0.2, -0.18],
-        [-0.18, 0.2, 0.18],
-        [0.18, 0.2, 0.18],
-      ].map((leg, index) => (
-        <mesh key={index} castShadow receiveShadow position={leg as [number, number, number]}>
-          <cylinderGeometry args={[0.03, 0.03, 0.4, 16]} />
-          <meshStandardMaterial color="#7f6f5d" roughness={0.7} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-function DiningSet() {
-  return (
-    <group>
-      <mesh castShadow receiveShadow position={[0, 0.75, 0]}>
-        <cylinderGeometry args={[1.1, 1.1, 0.08, 48]} />
-        <meshStandardMaterial color="#e7ddcf" roughness={0.45} metalness={0.05} />
-      </mesh>
-      <mesh castShadow receiveShadow position={[0, 0.5, 0]}>
-        <cylinderGeometry args={[0.14, 0.16, 0.5, 24]} />
-        <meshStandardMaterial color="#a8947f" roughness={0.6} />
-      </mesh>
-      {[
-        [-0.7, 0.25, -0.7],
-        [0.7, 0.25, -0.7],
-        [-0.7, 0.25, 0.7],
-        [0.7, 0.25, 0.7],
-      ].map((leg, index) => (
-        <mesh key={index} castShadow receiveShadow position={leg as [number, number, number]}>
-          <cylinderGeometry args={[0.06, 0.07, 0.5, 18]} />
-          <meshStandardMaterial color="#8a7561" roughness={0.6} />
-        </mesh>
-      ))}
-
-      <Chair position={[-1.25, 0, 0]} rotation={[0, Math.PI / 2, 0]} />
-      <Chair position={[1.25, 0, 0]} rotation={[0, -Math.PI / 2, 0]} />
-      <Chair position={[0, 0, -1.25]} rotation={[0, 0, 0]} />
-      <Chair position={[0, 0, 1.25]} rotation={[0, Math.PI, 0]} />
-
-      <mesh castShadow receiveShadow position={[0.7, 0.35, 0.6]}>
-        <cylinderGeometry args={[0.05, 0.06, 0.7, 20]} />
-        <meshStandardMaterial color="#c2b59b" roughness={0.4} metalness={0.2} />
-      </mesh>
-      <mesh castShadow receiveShadow position={[0.7, 0.8, 0.6]}>
-        <coneGeometry args={[0.28, 0.35, 24]} />
-        <meshStandardMaterial color="#f2eee7" roughness={0.25} emissive="#f6f0e8" emissiveIntensity={0.15} />
-      </mesh>
-    </group>
-  );
-}
+import { ArrowLeft, Truck, Headset, ShieldCheck, Gem } from "lucide-react";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section className="w-full px-4 md:px-8 pb-12 pt-4 bg-[#e8e7e3]">
-      {/* Hero Container */}
-      <div className="relative w-full rounded-t-[3rem] rounded-bl-[4rem] rounded-br-3xl bg-[#91A57D] overflow-hidden min-h-[480px] flex flex-col items-center justify-between text-white shadow-xl">
-        
-        {/* Headline */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mt-10 text-center z-10 px-4"
-        >
-          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter w-full max-w-5xl mx-auto leading-none drop-shadow-lg">
-            Discover Your Perfect Space
-          </h1>
-        </motion.div>
-
-        {/* Hero Visual Area */}
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          // Change the min-h values here to control the green card height
-          className="relative w-full max-w-6xl px-4 mt-6 flex-1 min-h-[180px] sm:min-h-[240px] lg:min-h-[280px] flex items-center justify-center z-0 rounded-t-3xl"
-        >
-          <div className="h-full w-full max-w-4xl rounded-3xl bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_rgba(167,184,153,0.25)_45%,_rgba(145,165,125,0.2)_100%)]" />
-        </motion.div>
-
-        {/* Floating Card: Furniture Design Ideas */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="absolute left-8 bottom-20 md:bottom-32 bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl max-w-xs md:max-w-sm text-gray-900 border border-white/20"
-        >
-          <div className="flex items-center gap-2 mb-2 text-[#91A57D]">
-            <Sparkles size={16} />
-            <span className="text-xs font-bold uppercase tracking-wider">Premium Collection</span>
+    <>
+      <section className="w-full bg-[#F7F3EC] px-4 md:px-8 pt-0 pb-0">
+        <div className="relative max-w-[1500px] mx-auto min-h-[500px] md:min-h-[590px] overflow-hidden bg-[#062A43] flex items-center">
+          <img src="/toranj-hero.jpg" alt="مبلمان و دکوراسیون ترنج" className="absolute inset-0 w-full h-full object-cover object-center" />
+          <div className="absolute inset-0 bg-gradient-to-l from-[#031C2E]/15 via-[#031C2E]/50 to-[#031C2E]/95" />
+          <div className="relative z-10 w-full max-w-7xl mx-auto px-7 md:px-16 lg:px-24 py-16">
+            <motion.div initial={{ opacity: 0, x: 35 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7 }} className="max-w-xl text-right">
+              <p className="text-[#D9AE62] font-semibold text-lg mb-5">مبلمان و دکوراسیون چوبی</p>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.25] tracking-tight text-[#FCFAF6]">
+                ترکیب هنر و اصالت<br />در خانه شما
+              </h1>
+              <div className="w-40 h-px bg-[#B88A3A] my-7" />
+              <p className="text-[#FCFAF6]/90 text-base md:text-lg leading-8 max-w-lg">
+                محصولات ترنج، حاصل هنر دست استادکاران ایرانی با بهترین متریال و ماندگارترین کیفیت.
+              </p>
+              <Link href="/shop" className="inline-flex items-center gap-3 mt-8 px-7 py-3.5 bg-[#D9AE62] hover:bg-[#B88A3A] text-[#031C2E] rounded-md font-bold transition-colors">
+                مشاهده محصولات <ArrowLeft size={19} />
+              </Link>
+            </motion.div>
           </div>
-          <h3 className="font-bold text-lg mb-2">Furniture Design Ideas</h3>
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-            Explore our curated collections of modern interiors.
-          </p>
-          <button className="flex items-center gap-2 text-[#91A57D] font-semibold text-sm hover:underline group">
-            Shop Now <ArrowRight size={16} className="transform group-hover:translate-x-1 transition-transform" />
-          </button>
-        </motion.div>
+        </div>
+      </section>
 
-      </div>
-
-      {/* Feature Bar */}
-      <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-6xl mx-auto px-4">
-        {[
-          { icon: <ShoppingBag size={24} />, text: "Easy For Shopping" },
-          { icon: <Truck size={24} />, text: "Fast & Free Shipping" },
-          { icon: <Headset size={24} />, text: "24/7 Support" },
-          { icon: <ShieldCheck size={24} />, text: "Money Back Guarantee" },
-        ].map((feature, idx) => (
-          <motion.div
-            key={idx}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 + idx * 0.1 }}
-            className="flex flex-col items-center justify-center p-6 bg-white rounded-2xl shadow-sm text-center hover:shadow-md transition-shadow cursor-default"
-          >
-            <div className="text-[#91A57D] mb-3 bg-[#e8e7e3] p-3 rounded-full">
-              {feature.icon}
+      <section className="bg-[#FCFAF6] border-b border-[#062A43]/10 px-5 md:px-10 py-6">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-0 divide-x divide-x-reverse divide-[#B88A3A]/40">
+          {[
+            { icon: Truck, title: "ارسال سریع و مطمئن", sub: "به سراسر کشور" },
+            { icon: ShieldCheck, title: "ضمانت کیفیت", sub: "و اصالت کالا" },
+            { icon: Headset, title: "پشتیبانی حرفه‌ای", sub: "پاسخگویی ۷ روز هفته" },
+            { icon: Gem, title: "تنوع محصولات", sub: "در سبک‌های اصیل ایرانی" },
+          ].map(({ icon: Icon, title, sub }) => (
+            <div key={title} className="flex items-center justify-center gap-3 px-5 text-center">
+              <Icon size={31} strokeWidth={1.5} className="text-[#B88A3A] shrink-0" />
+              <div><p className="font-bold text-[#0B2942] text-sm md:text-base">{title}</p><p className="text-[#6F6A62] text-xs md:text-sm mt-1">{sub}</p></div>
             </div>
-            <p className="font-semibold text-gray-800 text-sm md:text-base">{feature.text}</p>
-          </motion.div>
-        ))}
-      </div>
-    </section>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
