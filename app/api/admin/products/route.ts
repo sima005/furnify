@@ -2,66 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { createAdminClient } from "@/utils/supabase/admin";
-
-export const dynamic = "force-dynamic";
-
-async function isCreator() {
-  const supabase = createClient(await cookies());
-  const { data: { user } } = await supabase.auth.getUser();
-  const creator = process.env.FURNIFY_CREATOR_EMAIL?.trim().toLowerCase();
-  return !!user && !!creator && user.email?.trim().toLowerCase() === creator;
-}
-
-function payload(body: any) {
-  const basePrice = Number(body.price);
-  const discount = Math.min(100, Math.max(0, Number(body.discount_percent) || 0));
-  return {
-    name: String(body.name ?? "").trim(),
-    price: Math.round(basePrice * (1 - discount / 100)),
-    original_price: discount > 0 ? basePrice : (body.original_price === "" || body.original_price == null ? null : Number(body.original_price)),
-    image: body.image || null,
-    model_url: body.model_url || null,
-    tag: body.tag ? String(body.tag).trim() : null,
-    rating: Number(body.rating) || 5,
-    reviews: body.reviews ? String(body.reviews).trim() : "0",
-    has_3d: Boolean(body.has_3d),
-    discount_percent: discount,
-    color: body.color ? String(body.color).trim() : null,
-    fabric_type: body.fabric_type ? String(body.fabric_type).trim() : null,
-    material: body.material ? String(body.material).trim() : null,
-    dimensions: body.dimensions ? String(body.dimensions).trim() : null,
-  };
-}
-
-export async function POST(req: NextRequest) {
-  if (!(await isCreator())) return NextResponse.json({ error: "دسترسی غیرمجاز. فقط Creator می‌تواند محصول اضافه کند." }, { status: 403 });
-  try {
-    const body = await req.json();
-    const p = payload(body);
-    if (!p.name || !Number.isFinite(Number(body.price)) || Number(body.price) < 0) return NextResponse.json({ error: "نام و قیمت معتبر وارد کنید." }, { status: 400 });
-    const { data, error } = await createAdminClient().from("products").insert(p).select().single();
-    if (error) return NextResponse.json({ error: `خطای دیتابیس: ${error.message}` }, { status: 500 });
-    return NextResponse.json({ product: data }, { status: 201 });
-  } catch (e: any) { return NextResponse.json({ error: e?.message || "افزودن محصول ناموفق بود." }, { status: 500 }); }
-}
-
-export async function PATCH(req: NextRequest) {
-  if (!(await isCreator())) return NextResponse.json({ error: "دسترسی غیرمجاز." }, { status: 403 });
-  try {
-    const body = await req.json();
-    if (!body.id) return NextResponse.json({ error: "شناسه محصول ارسال نشده است." }, { status: 400 });
-    const p = payload(body);
-    const { data, error } = await createAdminClient().from("products").update(p).eq("id", body.id).select().single();
-    if (error) return NextResponse.json({ error: `خطای دیتابیس: ${error.message}` }, { status: 500 });
-    return NextResponse.json({ product: data });
-  } catch (e: any) { return NextResponse.json({ error: e?.message || "ویرایش محصول ناموفق بود." }, { status: 500 }); }
-}
-
-export async function DELETE(req: NextRequest) {
-  if (!(await isCreator())) return NextResponse.json({ error: "دسترسی غیرمجاز." }, { status: 403 });
-  const id = new URL(req.url).searchParams.get("id");
-  if (!id) return NextResponse.json({ error: "شناسه محصول ارسال نشده است." }, { status: 400 });
-  const { error } = await createAdminClient().from("products").delete().eq("id", id);
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ ok: true });
-}
+export const dynamic="force-dynamic";
+async function isCreator(){const s=createClient(await cookies());const{data:{user}}=await s.auth.getUser();const e=process.env.FURNIFY_CREATOR_EMAIL?.trim().toLowerCase();return!!user&&!!e&&user.email?.trim().toLowerCase()===e}
+function base(b:any){return{name:String(b.name??"").trim(),price:Number(b.price),original_price:b.original_price==null||b.original_price===""?null:Number(b.original_price),image:b.image||null,model_url:b.model_url||null,tag:b.tag?String(b.tag).trim():null,rating:Number(b.rating)||5,reviews:b.reviews?String(b.reviews).trim():"0",has_3d:Boolean(b.has_3d),discount_percent:Math.min(100,Math.max(0,Number(b.discount_percent)||0)),color:b.color?String(b.color).trim():null,fabric_type:b.fabric_type?String(b.fabric_type).trim():null,material:b.material?String(b.material).trim():null,dimensions:b.dimensions?String(b.dimensions).trim():null,category:b.category?String(b.category).trim():null}}
+function variants(b:any){return Array.isArray(b.variants)?b.variants.map((v:any)=>({color_name:String(v.color_name??"").trim(),color_hex:String(v.color_hex||"#D9AE62"),price:Number(v.price),original_price:v.original_price==null||v.original_price===""?null:Number(v.original_price),discount_percent:Math.min(100,Math.max(0,Number(v.discount_percent)||0))})).filter((v:any)=>v.color_name&&Number.isFinite(v.price)&&v.price>=0):[]}
+async function save(id:string|undefined,b:any){const admin=createAdminClient();const p=base(b);if(!p.name||!Number.isFinite(p.price)||p.price<0)return{error:"نام و قیمت معتبر وارد کنید.",status:400};const q=id?admin.from("products").update(p).eq("id",id).select().single():admin.from("products").insert(p).select().single();const{data,error}=await q;if(error)return{error:`خطای دیتابیس: ${error.message}`,status:500};const vs=variants(b);const{error:del}=await admin.from("product_variants").delete().eq("product_id",data.id);if(del)return{error:`خطای حذف رنگ‌های قبلی: ${del.message}`,status:500};if(vs.length){const{error:ins}=await admin.from("product_variants").insert(vs.map((v:any)=>({...v,product_id:data.id})));if(ins)return{error:`خطای ثبت رنگ‌ها: ${ins.message}`,status:500}}return{product:data,variants:vs,status:id?200:201}}
+export async function POST(req:NextRequest){if(!(await isCreator()))return NextResponse.json({error:"دسترسی غیرمجاز. فقط Creator می‌تواند محصول اضافه کند."},{status:403});try{const r=await save(undefined,await req.json());return NextResponse.json(r,{status:r.status})}catch(e:any){return NextResponse.json({error:e?.message||"افزودن محصول ناموفق بود."},{status:500})}}
+export async function PATCH(req:NextRequest){if(!(await isCreator()))return NextResponse.json({error:"دسترسی غیرمجاز."},{status:403});try{const b=await req.json();if(!b.id)return NextResponse.json({error:"شناسه محصول ارسال نشده است."},{status:400});const r=await save(b.id,b);return NextResponse.json(r,{status:r.status})}catch(e:any){return NextResponse.json({error:e?.message||"ویرایش محصول ناموفق بود."},{status:500})}}
+export async function DELETE(req:NextRequest){if(!(await isCreator()))return NextResponse.json({error:"دسترسی غیرمجاز."},{status:403});const id=new URL(req.url).searchParams.get("id");if(!id)return NextResponse.json({error:"شناسه محصول ارسال نشده است."},{status:400});const{error}=await createAdminClient().from("products").delete().eq("id",id);if(error)return NextResponse.json({error:error.message},{status:500});return NextResponse.json({ok:true})}
