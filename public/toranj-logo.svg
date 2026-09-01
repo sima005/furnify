@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180">
+<defs><style>.navy{fill:#062A43}.gold{fill:#B88A3A}.cream{fill:#FCFAF6}.fa{font-family:Tahoma,Arial,sans-serif}</style></defs>
+<g transform="translate(18 18)"><circle cx="72" cy="72" r="67" class="navy"/><circle cx="72" cy="72" r="57" fill="none" stroke="#D9AE62" stroke-width="2"/><path d="M72 18l10 27 27-10-10 27 27 10-27 10 10 27-27-10-10 27-10-27-27 10 10-27-27-10 27-10-10-27 27 10z" fill="none" stroke="#D9AE62" stroke-width="1.5" opacity=".8"/><circle cx="72" cy="72" r="30" fill="none" stroke="#FCFAF6" stroke-width="1.5"/><text x="72" y="80" text-anchor="middle" class="fa cream" font-size="23">ترنج</text></g>
+<text x="190" y="76" class="fa navy" font-size="49" font-weight="700">ترنج</text><text x="205" y="108" class="navy" font-size="14" letter-spacing="7">TORANJ</text><path d="M190 124h275" stroke="#B88A3A" stroke-width="1"/><text x="205" y="148" class="fa" fill="#6B4328" font-size="12">هنر چوب و اصالت ایرانی</text>
+</svg>
