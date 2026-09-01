@@ -1,8 +1,16 @@
 'use client';
 import React from 'react';
 import { motion, useReducedMotion } from 'motion/react';
-import { Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import Link from 'next/link';
+
+const Instagram = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <rect width="20" height="20" x="2" y="2" rx="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+  </svg>
+);
 
 const columns = [
   { label: 'دسترسی سریع', links: [{title:'صفحه اصلی',href:'/'},{title:'فروشگاه',href:'/shop'},{title:'درباره ما',href:'/about'}] },
@@ -15,7 +23,7 @@ export function Footer() {
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 border-b border-white/10 pb-10">
         <AnimatedContainer><img src="/toranj-logo.svg" alt="ترنج" className="w-52 h-auto mb-5 brightness-0 invert"/><p className="text-white/60 text-sm leading-7">ترنج؛ تلفیق هنر اصیل ایرانی با طراحی ماندگار برای خانه‌ای که دوستش دارید.</p></AnimatedContainer>
         {columns.map((col,i)=><AnimatedContainer key={col.label} delay={.1+i*.1}><h3 className="font-bold text-[#D9AE62] mb-5">{col.label}</h3><ul className="space-y-3 text-sm text-white/65">{col.links.map(l=><li key={l.title}><Link href={l.href} className="hover:text-[#D9AE62] transition-colors">{l.title}</Link></li>)}</ul></AnimatedContainer>)}
-        <AnimatedContainer><h3 className="font-bold text-[#D9AE62] mb-5">با ما در ارتباط باشید</h3><div className="space-y-4 text-sm text-white/65"><p className="flex gap-2 items-center"><Phone size={16}/>۰۲۱-۱۳۳۴۵۶۷۸</p><p className="flex gap-2 items-center"><Mail size={16}/>info@toranj.ir</p><p className="flex gap-2 items-center"><MapPin size={16}/>تهران، ایران</p></div><div className="flex gap-3 mt-5"><span className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center"><Instagram size={17}/></span></div></AnimatedContainer>
+        <AnimatedContainer><h3 className="font-bold text-[#D9AE62] mb-5">با ما در ارتباط باشید</h3><div className="space-y-4 text-sm text-white/65"><p className="flex gap-2 items-center"><Phone size={16}/>۰۲۱-۱۳۳۴۵۶۷۸</p><p className="flex gap-2 items-center"><Mail size={16}/>info@toranj.ir</p><p className="flex gap-2 items-center"><MapPin size={16}/>تهران، ایران</p></div><div className="flex gap-3 mt-5"><span className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center"><Instagram /></span></div></AnimatedContainer>
       </div>
       <div className="pt-6 flex flex-col md:flex-row justify-between gap-3 text-xs text-white/40"><span>© {new Date().getFullYear()} ترنج. تمامی حقوق محفوظ است.</span><span>ساخته شده با عشق برای خانه‌های ایرانی</span></div>
     </div>
