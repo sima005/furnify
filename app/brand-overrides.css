@@ -1,0 +1,12 @@
+/* Toranj theme bridge: keeps legacy pages visually consistent while they are being localized. */
+[class*="bg-[#e8e7e3]"]{background-color:#F7F3EC!important}
+[class*="bg-white"]{background-color:#FCFAF6!important}
+[class*="bg-[#91A57D]"]{background-color:#062A43!important}
+[class*="bg-[#91A57D]/"]{background-color:rgba(184,138,58,.10)!important}
+[class*="text-[#91A57D]"]{color:#B88A3A!important}
+[class*="border-[#91A57D]"]{border-color:#B88A3A!important}
+[class*="focus:ring-[#91A57D]"]:focus{--tw-ring-color:#B88A3A!important}
+[class*="hover:bg-[#7e916c]"]:hover,[class*="hover:bg-[#7a8d67]"]:hover{background-color:#062A43!important}
+[class*="bg-[#f7f7f5]"]{background-color:#F7F3EC!important}
+[class*="bg-gray-50"]{background-color:#FCFAF6!important}
+[class*="text-gray-900"]{color:#0B2942!important}
