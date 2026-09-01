@@ -1,19 +1,20 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Vazirmatn } from "next/font/google";
 import Navbar from "@/components/Navbar";
 import { Footer } from "@/components/ui/footer-section";
 import { CartProvider } from "@/context/CartContext";
 import FloatingCart from "@/components/FloatingCart";
 import "./globals.css";
 
-const interSans = Inter({
-  variable: "--font-inter-sans",
-  subsets: ["latin"],
+const vazirmatn = Vazirmatn({
+  variable: "--font-vazirmatn",
+  subsets: ["arabic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Furnify - Modern Furniture",
-  description: "Discover your perfect space with Furnify.",
+  title: "ترنج | هنر و اصالت در خانه",
+  description: "مبلمان و دکوراسیون چوبی اصیل ایرانی با طراحی ماندگار و کیفیت بالا.",
 };
 
 export default function RootLayout({
@@ -22,15 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${interSans.variable} font-sans antialiased`}
-    >
-      <body className="min-h-full flex flex-col bg-[#e8e7e3] text-gray-900 selection:bg-[#91A57D] selection:text-white">
+    <html lang="fa" dir="rtl" className={`${vazirmatn.variable} font-sans antialiased`}>
+      <body className="min-h-screen flex flex-col bg-[#F7F3EC] text-[#0B2942]">
         <CartProvider>
-            <Navbar />
-                {children}
-            <Footer />
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
           <FloatingCart />
         </CartProvider>
       </body>
